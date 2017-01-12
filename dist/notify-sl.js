@@ -98,7 +98,7 @@
     options = notify.trigger('open', options);
     
     if ( options.closeAll ) {
-      closeAll();
+      notify.closeAll();
     }
     
     var box      = document.createElement("div"),
