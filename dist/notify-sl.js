@@ -37,7 +37,7 @@
     var listeners = {};
     sourceObject = sourceObject || {};
     sourceObject.trigger = function(name, data) {
-      data = data || true;
+      data = ( typeof data == 'string' ) ? data : data || true;
       (listeners[name]||[]).forEach(function(callback) {
         data = data && callback(data);
       });
