@@ -115,7 +115,7 @@
     }
     
     // Run some styling on the box
-    $box.css(defaultStyle);
+    $box.css(notify.style);
     if ( options.style ) {
       $box.css(options.style);
     }
