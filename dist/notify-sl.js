@@ -174,7 +174,7 @@
     $box
       .css({ left: '-100%' })
       .css({ left: '', right: -box.offsetWidth })
-      .css({ transition: 'right ' + animateDuration + 'ms ease' });
+      .css({ transition: 'right ' + notify.animateDuration + 'ms ease' });
     setTimeout(function () {
       $box.css({ right: '1em' })
         .each(function () {
