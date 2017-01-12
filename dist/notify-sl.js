@@ -21,9 +21,9 @@
   // Generates a unique ID on the page
   var uniqueId        = function () {
     var output = '0';
-    while ( !isNaN(output) )                     output  = randomChar(); // First char must not be numeric
-    while ( output.length < uniqueId.minLength ) output += randomChar(); // Satisfy minimum length
-    while ( document.getElementById(output) )    output += randomChar(); // And uniqueness
+    while ( !isNaN(output) )                     output  = uniqueId.randomChar(); // First char must not be numeric
+    while ( output.length < uniqueId.minLength ) output += uniqueId.randomChar(); // Satisfy minimum length
+    while ( document.getElementById(output) )    output += uniqueId.randomChar(); // And uniqueness
     return output;
   };
   uniqueId.randomChar = function () {
