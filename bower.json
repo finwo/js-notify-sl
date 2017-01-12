@@ -1,0 +1,17 @@
+{
+  "name": "notify-sl",
+  "homepage": "https://github.com/finwo/js-notify-sl",
+  "authors": [
+    "Robin Bron <robin@finwo.nl>"
+  ],
+  "description": "Simple notification library",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
