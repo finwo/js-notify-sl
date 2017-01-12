@@ -168,7 +168,7 @@
     
     // Let's show the box
     document.body.appendChild(box);
-    openBoxes[ box.id ] = box;
+    notify.openBoxes[ box.id ] = box;
     
     // Animate into view
     $box
