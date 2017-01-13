@@ -1,4 +1,3 @@
-// Build by finwo @ Fri Jan 13 09:52:33 CET 2017
 (function ( factory, exports ) {
 
     // Use requirejs if possible
@@ -20,45 +19,10 @@
 })(function ( $ ) {
 
     // Generates a unique ID on the page
-    var uniqueId = (function () {
-  
-  var module = function () {
-    var output = '0';
-    while ( !isNaN(output) )                     output  = module.randomChar(); // First char must not be numeric
-    while ( output.length < uniqueId.minLength ) output += module.randomChar(); // Satisfy minimum length
-    while ( document.getElementById(output) )    output += module.randomChar(); // And uniqueness
-    return output;
-  };
-  
-  module.randomChar = function () {
-    return module.alphabet.charAt(Math.round(Math.random() * (module.alphabet.length - 1)));
-  };
-  module.minLength  = 8;
-  module.alphabet   = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-  
-  return module;
-  
-})()
-;
+    var uniqueId = <?php include("unique-id.js"); ?>;
 
     // Allow attaching events to almost any object
-    var eventObject = function(sourceObject) {
-  var listeners = {};
-  sourceObject = sourceObject || {};
-  sourceObject.trigger = function(name, data) {
-    data = ( typeof data == 'string' ) ? data : data || true;
-    (listeners[name]||[]).forEach(function(callback) {
-      data = data && callback(data);
-    });
-    return data;
-  };
-  sourceObject.on = function(name, callback) {
-    (listeners[name]=listeners[name]||[]).push(callback);
-    return sourceObject;
-  };
-  return sourceObject;
-}
-;
+    var eventObject = <?php include("event-object.js"); ?>;
 
     // Our module
     var notify = eventObject(function () {
