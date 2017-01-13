@@ -1,15 +1,15 @@
 (function ( factory, exports ) {
 
     // Use requirejs if possible
-    if((typeof define == 'function') && define.amd ) {
-        return define('notify-sl', ['jquery'], factory);
+    if ( (typeof define == 'function') && define.amd ) {
+        return define('notify-sl', [ 'jquery' ], factory);
     }
 
     // Try to fetch jquery
     var jq = window.$ || window.jQuery;
 
     // We really need it
-    if (!jq) {
+    if ( !jq ) {
         throw new Error("jQuery is required for notify-sl");
     }
 
@@ -29,16 +29,44 @@
         return notify.open.apply(null, arguments);
     });
 
+    // Keep a reference to the body
+    // We'll use it more often
+    var $body = $(document.body);
+
+    // Build CSS element
+    var $css       = $("#notify-sl-css");
+    $css           = $css.length && $css || $('<style id="notify-sl-css"></style>');
+    $body.append($css);
+    $css.html(
+        '#notify-sl-container {' +
+            'padding:'  + '0;' +
+            'position:' + 'fixed;' +
+            'right:'    + '1em;' +
+            'top:'      + '0;' +
+        '}' +
+
+        '#notify-sl-container:after {' +
+            'clear:'      + 'both;' +
+            'content:'    + '".";' +
+            'display:'    + 'block;' +
+            'height:'     + '0;' +
+            'visibility:' + 'hidden;' +
+        '}');
+
+    // Create a container for our notifications
+    var container = $("#notify-sl-container");
+    container     = container.length && container || $('<div id="notify-sl-container"></div>');
+    $body.append(container);
+
     notify.animateDuration = 250;
-    notify.openBoxes = {};
-    notify.style          = {
+    notify.openBoxes       = {};
+    notify.style           = {
         'background': document.body.style.background || '#1f1d1d',
         'border'    : '1px solid #292929',
-        'color'     : '#FFF',
+        'color'     : document.body.style.color || '#FFF',
+        'margin-top': '1em',
         'padding'   : '1em',
-        'top'       : '1em',
-        'max-width' : '50%',
-        'position'  : 'fixed',
+        'position'  : 'relative',
         'z-index'   : 1060
     };
 
@@ -104,12 +132,12 @@
                 $title   = $(title),
                 $message = $(message);
             //translate sentence
-            $title.text(notify.trigger('locale',options.title || ""));
-            $message.text(notify.trigger('locale',options.message || ""));
-            $title.css({marginTop:'0'});
+            $title.text(notify.trigger('locale', options.title || ""));
+            $message.text(notify.trigger('locale', options.message || ""));
+            $title.css({ marginTop: '0' });
             // Append message to notification box
-            if ($title.text().length)   $box.append($title);
-            if ($message.text().length) $box.append($message);
+            if ( $title.text().length )   $box.append($title);
+            if ( $message.text().length ) $box.append($message);
         }
 
         // Handle buttons
@@ -122,9 +150,9 @@
                 $button
                     .addClass('btn')
                     .addClass('btn-default')
-                    .text(notify.trigger('locale',text));
+                    .text(notify.trigger('locale', text));
 
-                if (firstButton) {
+                if ( firstButton ) {
                     $button.addClass('btn-primary');
                     firstButton = false;
                 }
@@ -141,7 +169,7 @@
         }
 
         // Let's show the box
-        document.body.appendChild(box);
+        container.append($box);
         notify.openBoxes[ box.id ] = box;
 
         // Animate into view
@@ -150,7 +178,7 @@
             .css({ left: '', right: -box.offsetWidth })
             .css({ transition: 'right ' + notify.animateDuration + 'ms ease' });
         setTimeout(function () {
-            $box.css({ right: '1em' })
+            $box.css({ right: '0' })
                 .each(function () {
                     if ( options.timeout ) {
                         setTimeout(function () {
@@ -172,7 +200,7 @@
         data = data || {};
 
         notify({
-            closeAll: true,
+            closeAll: false,
             buttons : data.timeout && {} || { ok: true },
             title   : title,
             message : message,
@@ -195,7 +223,7 @@
         notify.open({
             closeAll: true,
             buttons : { 'labels.ok': true, 'labels.cancel': false },
-            title   : title,
+            title     : title,
             message : message,
             callback: callback,
             data    : data
@@ -216,8 +244,8 @@
 
         var $title   = $("<h2></h2>"),
             $message = $("<p></p>");
-        $title.text(notify.trigger('locale',title || ''));
-        $message.text(notify.trigger('locale',message || ''));
+        $title.text(notify.trigger('locale', title || ''));
+        $message.text(notify.trigger('locale', message || ''));
 
         var $form  = $("<form onsubmit='return false;'></form>");
         var $input = $('<input/>');
@@ -228,8 +256,8 @@
         $form.addClass('');
         $form.append($input);
 
-        if($title.text().length)   contents.push($title);
-        if($message.text().length) contents.push($message);
+        if ( $title.text().length )   contents.push($title);
+        if ( $message.text().length ) contents.push($message);
         contents.push($form);
 
         notify.open({
@@ -248,7 +276,6 @@
         });
 
     };
-
 
     // Return our module
     return notify;
