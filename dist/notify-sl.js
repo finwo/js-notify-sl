@@ -1,4 +1,4 @@
-// Build by finwo @ Fri Jan 13 11:14:12 CET 2017
+// Build by finwo @ Fri Jan 13 11:19:31 CET 2017
 (function ( factory, exports ) {
 
     // Use requirejs if possible
@@ -77,7 +77,7 @@
         '#notify-sl-container {' +
             'padding:'  + '0;' +
             'position:' + 'fixed;' +
-            'right:'    + '1em;' +
+            'right:'    + '0;' +
             'top:'      + '0;' +
         '}' +
 
@@ -214,7 +214,7 @@
             .css({ left: '', right: -box.offsetWidth })
             .css({ transition: 'right ' + notify.animateDuration + 'ms ease' });
         setTimeout(function () {
-            $box.css({ right: '0' })
+            $box.css({ right: '1em' })
                 .each(function () {
                     if ( options.timeout ) {
                         setTimeout(function () {

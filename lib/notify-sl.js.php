@@ -41,7 +41,7 @@
         '#notify-sl-container {' +
             'padding:'  + '0;' +
             'position:' + 'fixed;' +
-            'right:'    + '1em;' +
+            'right:'    + '0;' +
             'top:'      + '0;' +
         '}' +
 
@@ -178,7 +178,7 @@
             .css({ left: '', right: -box.offsetWidth })
             .css({ transition: 'right ' + notify.animateDuration + 'ms ease' });
         setTimeout(function () {
-            $box.css({ right: '0' })
+            $box.css({ right: '1em' })
                 .each(function () {
                     if ( options.timeout ) {
                         setTimeout(function () {
