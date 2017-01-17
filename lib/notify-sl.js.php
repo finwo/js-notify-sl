@@ -51,7 +51,12 @@
             'display:'    + 'block;' +
             'height:'     + '0;' +
             'visibility:' + 'hidden;' +
-        '}');
+        '}' +
+
+        '#notify-sl-container .notify-box > :last-child {' +
+            'margin-bottom:' + '0;' +
+        '}'
+    );
 
     // Create a container for our notifications
     var container = $("#notify-sl-container");
