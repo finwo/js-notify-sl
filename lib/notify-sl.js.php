@@ -53,6 +53,10 @@
             'visibility:' + 'hidden;' +
         '}' +
 
+        '#notify-sl-container .notify-box > p {' +
+            'margin-bottom:' + '1em;' +
+        '}' +
+
         '#notify-sl-container .notify-box > :last-child {' +
             'margin-bottom:' + '0;' +
         '}'

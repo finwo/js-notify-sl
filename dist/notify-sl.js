@@ -1,4 +1,4 @@
-// Build by finwo @ Wed Jan 18 16:51:36 CET 2017
+// Build by finwo @ Wed Jan 18 17:40:55 CET 2017
 (function ( factory, exports ) {
 
     // Use requirejs if possible
@@ -87,6 +87,10 @@
             'display:'    + 'block;' +
             'height:'     + '0;' +
             'visibility:' + 'hidden;' +
+        '}' +
+
+        '#notify-sl-container .notify-box > p {' +
+            'margin-bottom:' + '1em;' +
         '}' +
 
         '#notify-sl-container .notify-box > :last-child {' +
