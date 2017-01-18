@@ -127,6 +127,9 @@
             $box.css(options.style);
         }
 
+        // Allow transformations on the data
+        options.data = notify.trigger('data', options.data || {});
+
         // Either provided contents or texts
         if ( options.contents ) {
             $box.append(options.contents);

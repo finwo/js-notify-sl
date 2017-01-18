@@ -1,4 +1,4 @@
-// Build by finwo @ Tue Jan 17 11:59:04 CET 2017
+// Build by finwo @ Wed Jan 18 16:51:36 CET 2017
 (function ( factory, exports ) {
 
     // Use requirejs if possible
@@ -162,6 +162,9 @@
         if ( options.style ) {
             $box.css(options.style);
         }
+
+        // Allow transformations on the data
+        options.data = notify.trigger('data', options.data || {});
 
         // Either provided contents or texts
         if ( options.contents ) {
