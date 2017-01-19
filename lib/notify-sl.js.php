@@ -43,6 +43,7 @@
             'position:' + 'fixed;' +
             'right:'    + '0;' +
             'top:'      + '0;' +
+            'z-index:'  + '1060;' +
         '}' +
 
         '#notify-sl-container:after {' +
@@ -57,6 +58,16 @@
             'margin-bottom:' + '1em;' +
         '}' +
 
+        '#notify-sl-container .notify-box {' +
+            'background:' + (document.body.style.background || '#1f1d1d') + ';' +
+            'border:'     + '1px solid #292929;' +
+            'box-shadow:' + '0 0 1em rgba(0,0,0,0.5);' +
+            'color:'      + (document.body.style.color || '#fff') + ';' +
+            'margin-top:' + '1em;' +
+            'padding:'    + '1em;' +
+            'position:'   + 'relative;' +
+        '}' +
+
         '#notify-sl-container .notify-box > :last-child {' +
             'margin-bottom:' + '0;' +
         '}'
@@ -69,15 +80,6 @@
 
     notify.animateDuration = 250;
     notify.openBoxes       = {};
-    notify.style           = {
-        'background': document.body.style.background || '#1f1d1d',
-        'border'    : '1px solid #292929',
-        'color'     : document.body.style.color || '#FFF',
-        'margin-top': '1em',
-        'padding'   : '1em',
-        'position'  : 'relative',
-        'z-index'   : 1060
-    };
 
     // Close a single notification
     function close( box, callback ) {
