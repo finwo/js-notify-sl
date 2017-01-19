@@ -1,4 +1,4 @@
-// Build by finwo @ Thu Jan 19 10:56:58 CET 2017
+// Build by finwo @ Thu Jan 19 11:05:36 CET 2017
 (function ( factory, exports ) {
 
     // Use requirejs if possible
@@ -116,6 +116,7 @@
 
     notify.animateDuration = 250;
     notify.openBoxes       = {};
+    notify.style           = '';
 
     // Close a single notification
     function close( box, callback ) {
@@ -164,7 +165,7 @@
         }
 
         // Run some styling on the box
-        $box.css(notify.style);
+        $box.css(notify.style||'');
         if ( options.style ) {
             $box.css(options.style);
         }
