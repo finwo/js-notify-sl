@@ -80,7 +80,7 @@
 
     notify.animateDuration = 250;
     notify.openBoxes       = {};
-    notify.style           = '';
+    notify.style           = {};
 
     // Close a single notification
     function close( box, callback ) {
@@ -129,7 +129,7 @@
         }
 
         // Run some styling on the box
-        $box.css(notify.style||'');
+        $box.css(notify.style||{});
         if ( options.style ) {
             $box.css(options.style);
         }
