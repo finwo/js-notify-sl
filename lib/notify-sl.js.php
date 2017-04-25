@@ -38,38 +38,38 @@
     $css           = $css.length && $css || $('<style id="notify-sl-css"></style>');
     $body.append($css);
     $css.html(
-        '#notify-sl-container {' +
-            'padding:'  + '0;' +
+        '#notify-sl-container {'   +
+            'padding:'  + '0;'     +
             'position:' + 'fixed;' +
-            'right:'    + '0;' +
-            'top:'      + '0;' +
-            'z-index:'  + '1060;' +
+            'right:'    + '0;'     +
+            'top:'      + '0;'     +
+            'z-index:'  + '1060;'  +
         '}' +
 
         '#notify-sl-container:after {' +
-            'clear:'      + 'both;' +
-            'content:'    + '".";' +
-            'display:'    + 'block;' +
-            'height:'     + '0;' +
-            'visibility:' + 'hidden;' +
+            'clear:'      + 'both;'    +
+            'content:'    + '".";'     +
+            'display:'    + 'block;'   +
+            'height:'     + '0;'       +
+            'visibility:' + 'hidden;'  +
         '}' +
 
         '#notify-sl-container .notify-box > p {' +
-            'margin-bottom:' + '1em;' +
+            'margin-bottom:' + '1em;'            +
         '}' +
 
-        '#notify-sl-container .notify-box {' +
+        '#notify-sl-container .notify-box {'                                    +
             'background:' + (document.body.style.background || '#1f1d1d') + ';' +
-            'border:'     + '1px solid #292929;' +
-            'box-shadow:' + '0 0 1em rgba(0,0,0,0.5);' +
-            'color:'      + (document.body.style.color || '#fff') + ';' +
-            'margin-top:' + '1em;' +
-            'padding:'    + '1em;' +
-            'position:'   + 'relative;' +
+            'border:'     + '1px solid #292929;'                                +
+            'box-shadow:' + '0 0 1em rgba(0,0,0,0.5);'                          +
+            'color:'      + (document.body.style.color || '#fff') + ';'         +
+            'margin-top:' + '1em;'                                              +
+            'padding:'    + '1em;'                                              +
+            'position:'   + 'relative;'                                         +
         '}' +
 
         '#notify-sl-container .notify-box > :last-child {' +
-            'margin-bottom:' + '0;' +
+            'margin-bottom:' + '0;'                        +
         '}'
     );
 
@@ -216,7 +216,7 @@
 
         notify({
             closeAll: false,
-            buttons : data.timeout && {} || { ok: true },
+            buttons : data.timeout && {} || ( data.buttons || { 'labels.ok': true } ),
             title   : title,
             message : message,
             callback: callback,
@@ -237,8 +237,8 @@
 
         notify.open({
             closeAll: true,
-            buttons : { 'labels.ok': true, 'labels.cancel': false },
-            title     : title,
+            buttons : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
+            title   : title,
             message : message,
             callback: callback,
             data    : data
@@ -277,7 +277,7 @@
 
         notify.open({
             closeAll: true,
-            buttons : { 'ok': true, 'cancel': false },
+            buttons : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
             contents: contents,
             callback: function ( value ) {
                 if ( value ) {
