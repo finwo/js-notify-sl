@@ -2,21 +2,13 @@
 
     // Use requirejs if possible
     if ( (typeof define == 'function') && define.amd ) {
-        return define('notify-sl', [ 'jquery' ], factory);
-    }
-
-    // Try to fetch jquery
-    var jq = window.$ || window.jQuery;
-
-    // We really need it
-    if ( !jq ) {
-        throw new Error("jQuery is required for notify-sl");
+        return define('notify-sl', factory);
     }
 
     // Let's export it the normal way
     exports.notifysl = factory(jq);
 
-})(function ( $ ) {
+})(function () {
 
     // Generates a unique ID on the page
     var uniqueId = <?php include("unique-id.js"); ?>;
@@ -24,20 +16,42 @@
     // Allow attaching events to almost any object
     var eventObject = <?php include("event-object.js"); ?>;
 
+    // Helper functions
+    function getElement( tag, id ) {
+        tag = tag.toUpperCase();
+        var element = document.getElementById(id) || document.createElement(tag);
+        element.id = id;
+        document.body.appendChild(element);
+        return element;
+    }
+
+    function append( element, contents ) {
+        if ( Array.isArray(contents) ) return contents.map(append.bind(null,element));
+        if ( 'string' == typeof contents ) return element.innerHTML += contents;
+        if ( contents instanceof Node ) return element.appendChild(contents);
+        return false;
+    }
+
+    function on( element, event, handler ) {
+        if ( Array.isArray(event) )   return event.map(function(e) { return on(element,e,handler); });
+        if ( Array.isArray(handler) ) return handler.map(on.bind(null,element,event));
+        if ( 'function' != typeof handler ) return false;
+        if ( element.addEventListener ) {
+            return element.addEventListener(event, handler);
+        } else if ( element.attachEvent ) {
+            return element.attachEvent( 'on' + event, handler );
+        } else {
+            return false;
+        }
+    }
+
     // Our module
     var notify = eventObject(function () {
         return notify.open.apply(null, arguments);
     });
 
-    // Keep a reference to the body
-    // We'll use it more often
-    var $body = $(document.body);
-
     // Build CSS element
-    var $css       = $("#notify-sl-css");
-    $css           = $css.length && $css || $('<style id="notify-sl-css"></style>');
-    $body.append($css);
-    $css.html(
+    getElement('style', 'notify-sl-css').innerHTML =
         '#notify-sl-container {'   +
             'padding:'  + '0;'     +
             'position:' + 'fixed;' +
@@ -70,13 +84,10 @@
 
         '#notify-sl-container .notify-box > :last-child {' +
             'margin-bottom:' + '0;'                        +
-        '}'
-    );
+        '}';
 
     // Create a container for our notifications
-    var container = $("#notify-sl-container");
-    container     = container.length && container || $('<div id="notify-sl-container"></div>');
-    $body.append(container);
+    var container = getElement('div', 'notify-sl-container');
 
     notify.animateDuration = 250;
     notify.openBoxes       = {};
@@ -85,7 +96,7 @@
     // Close a single notification
     function close( box, callback ) {
         delete notify.openBoxes[ box.id ];
-        $(box).css({ right: -box.offsetWidth });
+        box.style.right = -box.offsetWidth;
         setTimeout(function () {
             if ( typeof box.dataset.cb == 'function' ) {
                 box.dataset.cb(false);
@@ -116,12 +127,11 @@
         }
 
         var box      = document.createElement("div"),
-            $box     = $(box),
             callback = options.callback || function () {};
 
-        box.id         = uniqueId();
-        box.dataset.cb = callback;
-        $box.addClass('notify-box');
+        box.id          = uniqueId();
+        box.dataset.cb  = callback;
+        box.className  += ' notify-box';
 
         // Make sure we can close again
         if ( !options.buttons && !options.timeout ) {
@@ -129,9 +139,11 @@
         }
 
         // Run some styling on the box
-        $box.css(notify.style||{});
+        box.style = notify.style || {};
         if ( options.style ) {
-            $box.css(options.style);
+            Object.keys(options.style).forEach(function(key) {
+                box.style[key] = options.style[key];
+            });
         }
 
         // Allow transformations on the data
@@ -139,68 +151,61 @@
 
         // Either provided contents or texts
         if ( options.contents ) {
-            $box.append(options.contents);
+            append(box,options.contents);
         } else {
             // Build title/message structure
             var title    = document.createElement("h2"),
-                message  = document.createElement("p"),
-                $title   = $(title),
-                $message = $(message);
+                message  = document.createElement("p");
             //translate sentence
-            $title.text(notify.trigger('locale', options.title || ""));
-            $message.text(notify.trigger('locale', options.message || ""));
-            $title.css({ marginTop: '0' });
+            append(title,document.createTextNode(notify.trigger('locale', options.title || "")));
+            append(message,document.createTextNode(notify.trigger('locale', options.message || "")));
+            title.style = title.style || {};
+            title.style.marginTop = 0;
             // Append message to notification box
-            if ( $title.text().length )   $box.append($title);
-            if ( $message.text().length ) $box.append($message);
+            if ( title.innerHTML   ) append(box,title);
+            if ( message.innerHTML ) append(box,message);
         }
 
         // Handle buttons
         if ( options.buttons ) {
             var firstButton = true;
-            $.each(options.buttons, function ( text, value ) {
-                var $button = $(document.createElement("button"));
-
-                //translate sentence
-                $button
-                    .addClass('btn')
-                    .addClass('btn-default')
-                    .text(notify.trigger('locale', text));
-
+            Object.keys(options.buttons).forEach(function(key) {
+                var button = document.createElement('BUTTON');
+                button.className = button.className || '';
+                button.className += ' btn';
+                button.className += ' btn-default';
+                button.appendChild(document.createTextNode(notify.trigger('locale', text)));
                 if ( firstButton ) {
-                    $button.addClass('btn-primary');
+                    button.className += ' btn-primary';
                     firstButton = false;
                 }
-
-                // Attach callbacks
-                $button
-                    .on('click', callback.bind(null, value))
-                    .on('click', function () {
+                on(button,'click', [
+                    callback.bind(null,value),
+                    function() {
                         box.dataset.cb = '';
                         close(box);
-                    });
-                $box.append($button);
+                    }
+                ]);
+                append(box,button);
             });
         }
 
         // Let's show the box
-        container.append($box);
+        append(container,box);
         notify.openBoxes[ box.id ] = box;
 
         // Animate into view
-        $box
-            .css({ left: '-100%' })
-            .css({ left: '', right: -box.offsetWidth })
-            .css({ transition: 'right ' + notify.animateDuration + 'ms ease' });
+        box.style.left       = '-100%';
+        box.style.right      = -box.offsetWidth;
+        box.style.left       = '';
+        box.style.transition = 'right ' + notify.animateDuration + 'ms ease';
         setTimeout(function () {
-            $box.css({ right: '1em' })
-                .each(function () {
-                    if ( options.timeout ) {
-                        setTimeout(function () {
-                            close(box, callback.bind(null, 'timeout'));
-                        }, options.timeout)
-                    }
-                })
+            box.style.right = '1em';
+            if ( options.timeout ) {
+                setTimeout(function() {
+                    close(box, callback.bind(null, 'timeout'));
+                }, options.timeout);
+            }
         }, 10);
     };
 
@@ -257,23 +262,23 @@
         // We'll make this worth our while
         var contents = [];
 
-        var $title   = $("<h2></h2>"),
-            $message = $("<p></p>");
-        $title.text(notify.trigger('locale', title || ''));
-        $message.text(notify.trigger('locale', message || ''));
+        var elTitle   = document.createElement('H2'),
+            elMessage = document.createElement('P');
+        append(elTitle,document.createTextNode(notify.trigger('locale', title || '')));
+        append(elMessage,document.createTextNode(notify.trigger('locale', message || '')));
 
-        var $form  = $("<form onsubmit='return false;'></form>");
-        var $input = $('<input/>');
+        var form = document.createElement('FORM'),
+            input = document.createElement('INPUT');
+        form.setAttribute('onsubmit', 'return false;');
         Object.keys(data).forEach(function ( key ) {
-            $input.prop(key, data[ key ]);
+            input.setAttribute(key, data[key]);
         });
-        $input.prop('name', 'prompt');
-        $form.addClass('');
-        $form.append($input);
+        input.setAttribute('name', 'prompt');
+        append(form,input);
 
-        if ( $title.text().length )   contents.push($title);
-        if ( $message.text().length ) contents.push($message);
-        contents.push($form);
+        if ( title.innerHTML   ) contents.push(title  );
+        if ( message.innerHTML ) contents.push(message);
+        contents.push(form);
 
         notify.open({
             closeAll: true,
@@ -281,7 +286,7 @@
             contents: contents,
             callback: function ( value ) {
                 if ( value ) {
-                    callback($input.val());
+                    callback(input.value);
                     return true;
                 }
                 callback(false);
