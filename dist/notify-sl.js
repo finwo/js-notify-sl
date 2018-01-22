@@ -1,4 +1,4 @@
-// Build by finwo @ Thu Jun 29 12:26:07 CEST 2017
+// Build by finwo @ ma 22 jan 2018 13:51:48 CET
 (function ( factory, exports ) {
 
     // Use requirejs if possible

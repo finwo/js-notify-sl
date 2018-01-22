@@ -1,3 +1,4 @@
+UGLIJS := $(shell bash -c "command -v uglify | head -n 1")
 
 dist: normal minified
 
@@ -8,4 +9,5 @@ normal:
 	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; php lib/notify-sl.js.php ; } > dist/notify-sl.js
 
 minified:
-	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; php lib/notify-sl.js.php | uglifyjs -c -m ; } > dist/notify-sl.min.js
+	echo $(UGLIJS)
+	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; php lib/notify-sl.js.php | $(UGLIJS) ; } > dist/notify-sl.min.js
