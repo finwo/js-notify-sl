@@ -1,0 +1,22 @@
+{
+  "name": "notify-sl",
+  "version": "1.0.2",
+  "description": "Simple browser notification library",
+  "main": "dist/notify-sl.min.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finwo/js-notify-sl.git"
+  },
+  "author": "Robin Bron <robin@finwo.nl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/finwo/js-notify-sl/issues"
+  },
+  "homepage": "https://github.com/finwo/js-notify-sl#readme"
+}
