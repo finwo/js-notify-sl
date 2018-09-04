@@ -1,4 +1,4 @@
-// Build by finwo @ di 4 sep 2018 14:35:22 CEST
+// Build by finwo @ di 4 sep 2018 15:38:03 CEST
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -98,41 +98,74 @@
         return notify.open.apply(null, arguments);
     });
 
-    // Build CSS element
+    // Fetch some stuff for styling
+    function compileStyle(style) {
+        return Object.keys(style).map(function(property) {
+          return property+':'+style[property];
+        }).join(';');
+    }
+
+    // Element to fetch styling from
+    var testElement =
+          document.getElementById('notify-style') ||
+          (document.getElementsByTagName('main')||[])[0] ||
+          (document.getElementsByTagName('form')||[])[0] ||
+          document.body;
+
+    var style = {
+        container     : {
+            'padding' : '0',
+            'position': 'fixed',
+            'right'   : '0',
+            'top'     : '0',
+            'z-index' : '1060',
+        },
+        containerAfter: {
+            'clear'     : 'both',
+            'content'   : '"."',
+            'display'   : 'block',
+            'height'    : '0',
+            'visibility': 'hidden',
+        },
+        notification: {
+            'background': getStyle( testElement, 'backgroundColor' ),
+            //'border'    : '1px solid '+getStyle( testCard, 'color' ),
+            'box-shadow': '0 1px 2px rgba(0,0,0,0.5)',
+            'color'     : getStyle( testElement, 'color'),
+            'margin-top': '1em',
+            'padding'   : '1em',
+            'position'  : 'relative'
+        },
+        notificationParagraph: {
+            'margin-bottom': '1em'
+        },
+        notificationLastChild: {
+            'margin-bottom': '0'
+        }
+    };
+
+      // Build CSS element
     getElement('style', 'notify-sl-css').innerHTML =
-        '#notify-sl-container {'   +
-            'padding:'  + '0;'     +
-            'position:' + 'fixed;' +
-            'right:'    + '0;'     +
-            'top:'      + '0;'     +
-            'z-index:'  + '1060;'  +
+        '#notify-sl-container {'          +
+            compileStyle(style.container) +
         '}' +
 
-        '#notify-sl-container:after {' +
-            'clear:'      + 'both;'    +
-            'content:'    + '".";'     +
-            'display:'    + 'block;'   +
-            'height:'     + '0;'       +
-            'visibility:' + 'hidden;'  +
+        '#notify-sl-container:after {'         +
+            compileStyle(style.containerAfter) +
         '}' +
 
-        '#notify-sl-container .notify-box > p {' +
-            'margin-bottom:' + '1em;'            +
+        '#notify-sl-container .notify-box > p {'      +
+            compileStyle(style.notificationParagraph) +
         '}' +
 
-        '#notify-sl-container .notify-box {'                                      +
-            'background:' + getStyle( document.body, 'backgroundColor' ) + ';'    +
-            'border:'     + '1px solid '+getStyle( document.body, 'color' ) + ';' +
-            'box-shadow:' + '0 1px 2px rgba(0,0,0,0.5);'                          +
-            'color:'      + getStyle( document.body, 'color' ) + ';'              +
-            'margin-top:' + '1em;'                                                +
-            'padding:'    + '1em;'                                                +
-            'position:'   + 'relative;'                                           +
+        '#notify-sl-container .notify-box {' +
+            compileStyle(style.notification) +
         '}' +
 
         '#notify-sl-container .notify-box > :last-child {' +
-            'margin-bottom:' + '0;'                        +
+            compileStyle(style.notificationLastChild)      +
         '}';
+
 
     // Create a container for our notifications
     var container = getElement('div', 'notify-sl-container');
@@ -217,26 +250,67 @@
         // Handle buttons
         if ( options.buttons ) {
             var firstButton = true;
-            Object.keys(options.buttons).forEach(function(key) {
+
+            if ( Array.isArray(options.buttons) ) {
+              options.buttons.forEach(function(button) {
+                var btn = document.createElement('BUTTON');
+                btn.className  = 'btn btn-default';
+                if(firstButton) {
+                  btn.className += ' btn-primary';
+                  firstButton = false;
+                }
+                if(Array.isArray(button)) {
+                  btn.innerText = notify.trigger('locale',button[0]);
+                  on(btn,'click',[
+                    callback.bind(null,button[1]),
+                    function(){box.dataset.cb='';close(box);}
+                  ]);
+                  if( ('object' === typeof button[2]) && Array.isArray(button[2]) ) {
+                    btn.className += ' ' + button[2].join(' ');
+                  }
+                } else {
+                  btn.innerText = notify.trigger('locale',button.text||'');
+                  on(btn,'click',[
+                    callback.bind(null,button.value||''),
+                    function(){box.dataset.cb='';close(box);}
+                  ]);
+                  if(Array.isArray(button.class)) {
+                    btn.className += ' '+button.class.join(' ');
+                  }
+                }
+                append(box,btn);
+              });
+            } else {
+              Object.keys(options.buttons).forEach(function(key) {
                 var button = document.createElement('BUTTON'),
                     value  = options.buttons[key];
                 button.className = button.className || '';
+                switch(typeof value) {
+                  case 'object':
+                    button.className += ' '+(value.class||'');
+                    button.appendChild(document.createTextNode(notify.trigger('locale', value.text || key)));
+                    value = ( value.value || key );
+                    break;
+                  default:
+                    button.appendChild(document.createTextNode(notify.trigger('locale', key)));
+                    break;
+                }
                 button.className += ' btn';
                 button.className += ' btn-default';
-                button.appendChild(document.createTextNode(notify.trigger('locale', key)));
                 if ( firstButton ) {
-                    button.className += ' btn-primary';
-                    firstButton = false;
+                  button.className += ' btn-primary';
+                  firstButton = false;
                 }
                 on(button,'click', [
-                    callback.bind(null,value),
-                    function() {
-                        box.dataset.cb = '';
-                        close(box);
-                    }
+                  callback.bind(null,value),
+                  function() {
+                    box.dataset.cb = '';
+                    close(box);
+                  }
                 ]);
                 append(box,button);
-            });
+              });
+            }
         }
 
         // Let's show the box
