@@ -1,4 +1,4 @@
-// Build by finwo @ di 4 sep 2018 13:53:32 CEST
+// Build by finwo @ di 4 sep 2018 13:57:43 CEST
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -67,16 +67,16 @@
     }
 
     function append( element, contents ) {
-        if ( Array.isArray(contents) ) return contents.map(append.bind(null,element));
-        if ( 'string' == typeof contents ) return element.innerHTML += contents;
-        if ( contents instanceof Node ) return element.appendChild(contents);
+        if ( Array.isArray(contents) ) { return contents.map(append.bind(null,element)); }
+        if ( 'string' == typeof contents ) { return element.innerHTML += contents; }
+        if ( contents instanceof Node ) { return element.appendChild(contents); }
         return false;
     }
 
     function on( element, event, handler ) {
-        if ( Array.isArray(event) )   return event.map(function(e) { return on(element,e,handler); });
-        if ( Array.isArray(handler) ) return handler.map(on.bind(null,element,event));
-        if ( 'function' != typeof handler ) return false;
+        if ( Array.isArray(event) )   { return event.map(function(e) { return on(element,e,handler); }); }
+        if ( Array.isArray(handler) ) { return handler.map(on.bind(null,element,event)); }
+        if ( 'function' != typeof handler ) { return false; }
         if ( element.addEventListener ) {
             return element.addEventListener(event, handler);
         } else if ( element.attachEvent ) {
@@ -203,8 +203,8 @@
             title.style = title.style || {};
             title.style.marginTop = 0;
             // Append message to notification box
-            if ( title.innerHTML   ) append(box,title);
-            if ( message.innerHTML ) append(box,message);
+            if ( title.innerHTML   ) { append(box,title);   }
+            if ( message.innerHTML ) { append(box,message); }
         }
 
         // Handle buttons
@@ -318,8 +318,8 @@
         input.setAttribute('name', 'prompt');
         append(form,input);
 
-        if ( title.innerHTML   ) contents.push(title  );
-        if ( message.innerHTML ) contents.push(message);
+        if ( title.innerHTML   ) { contents.push(title  ); }
+        if ( message.innerHTML ) { contents.push(message); }
         contents.push(form);
 
         notify.open({
