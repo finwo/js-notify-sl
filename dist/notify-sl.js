@@ -1,4 +1,6 @@
-// Build by finwo @ di 4 sep 2018 13:20:15 CEST
+// Build by finwo @ di 4 sep 2018 13:34:24 CEST
+/** global: define */
+/** global: Node   */
 (function ( factory ) {
 
     // Use requirejs if possible
@@ -6,8 +8,11 @@
         return define('notify-sl', factory);
     }
 
-    // Let's export it the normal way
+    // Export for browser/node
     this.notifysl = factory();
+
+    // Export for file inclusions
+    return this.notifysl;
 
 })(function () {
 
@@ -336,4 +341,4 @@
 
     // Return our module
     return notify;
-});
+})

@@ -7,8 +7,11 @@
         return define('notify-sl', factory);
     }
 
-    // Let's export it the normal way
+    // Export for browser/node
     this.notifysl = factory();
+
+    // Export for file inclusions
+    return this.notifysl;
 
 })(function () {
 
@@ -302,4 +305,4 @@
 
     // Return our module
     return notify;
-});
+})
