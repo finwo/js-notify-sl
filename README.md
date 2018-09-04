@@ -1,5 +1,11 @@
 # finwo / notify-sl
 
+[![npm](https://img.shields.io/npm/v/notify-sl.svg?style=flat-square)](https://npmjs.com/package/notify-sl/)
+[![Scrutinizer Build](https://img.shields.io/scrutinizer/build/g/finwo/js-notify-sl.svg?style=flat-square)](https://scrutinizer-ci.com/g/finwo/js-notify-sl/)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/finwo/js-notify-sl.svg?style=flat-square)](https://scrutinizer-ci.com/g/finwo/js-notify-sl/)
+[![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/finwo/js-notify-sl.svg?style=flat-square)](https://scrutinizer-ci.com/g/finwo/js-notify-sl/)
+[![npm](https://img.shields.io/npm/l/notify-sl.svg?style=flat-square)](https://npmjs.com/package/notify-sl/)
+
 Simple notification library
 
 ## Why
