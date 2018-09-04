@@ -21,6 +21,7 @@ build:
 #
 #      # npm dependencies
 #      - npm rebuild
+      - npm install -g uglify
       - npm install
 
   tests:

@@ -20,7 +20,5 @@
     "url": "https://github.com/finwo/js-notify-sl/issues"
   },
   "homepage": "https://github.com/finwo/js-notify-sl#readme",
-  "dependencies": {
-    "uglify": "^0.1.5"
-  }
+  "dependencies": {}
 }
