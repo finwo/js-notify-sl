@@ -1,4 +1,4 @@
-// Build by finwo @ di 4 sep 2018 13:57:43 CEST
+// Build by finwo @ di 4 sep 2018 14:35:22 CEST
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -86,6 +86,13 @@
         }
     }
 
+    function getStyle( element, property ) {
+      if ( element.currentStyle ) {
+        return element.currentStyle[property];
+      }
+      return document.defaultView.getComputedStyle(element)[property];
+    }
+
     // Our module
     var notify = eventObject(function () {
         return notify.open.apply(null, arguments);
@@ -113,14 +120,14 @@
             'margin-bottom:' + '1em;'            +
         '}' +
 
-        '#notify-sl-container .notify-box {'                                    +
-            'background:' + (document.body.style.background || '#1f1d1d') + ';' +
-            'border:'     + '1px solid #292929;'                                +
-            'box-shadow:' + '0 0 1em rgba(0,0,0,0.5);'                          +
-            'color:'      + (document.body.style.color || '#fff') + ';'         +
-            'margin-top:' + '1em;'                                              +
-            'padding:'    + '1em;'                                              +
-            'position:'   + 'relative;'                                         +
+        '#notify-sl-container .notify-box {'                                      +
+            'background:' + getStyle( document.body, 'backgroundColor' ) + ';'    +
+            'border:'     + '1px solid '+getStyle( document.body, 'color' ) + ';' +
+            'box-shadow:' + '0 1px 2px rgba(0,0,0,0.5);'                          +
+            'color:'      + getStyle( document.body, 'color' ) + ';'              +
+            'margin-top:' + '1em;'                                                +
+            'padding:'    + '1em;'                                                +
+            'position:'   + 'relative;'                                           +
         '}' +
 
         '#notify-sl-container .notify-box > :last-child {' +
@@ -137,7 +144,7 @@
     // Close a single notification
     function close( box, callback ) {
         delete notify.openBoxes[ box.id ];
-        box.style.right = -box.offsetWidth;
+        box.style.right = `-${box.offsetWidth}px`;
         setTimeout(function () {
             if ( typeof box.dataset.cb == 'function' ) {
                 box.dataset.cb(false);
