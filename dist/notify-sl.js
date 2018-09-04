@@ -1,4 +1,4 @@
-// Build by finwo @ di 4 sep 2018 12:32:35 CEST
+// Build by finwo @ di 4 sep 2018 13:15:46 CEST
 (function ( factory ) {
 
     // Use requirejs if possible
