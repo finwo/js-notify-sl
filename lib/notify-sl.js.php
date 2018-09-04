@@ -1,3 +1,5 @@
+/** global: define */
+/** global: Node   */
 (function ( factory ) {
 
     // Use requirejs if possible
