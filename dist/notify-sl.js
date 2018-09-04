@@ -1,4 +1,4 @@
-// Build by finwo @ di 4 sep 2018 13:50:15 CEST
+// Build by finwo @ di 4 sep 2018 13:53:32 CEST
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -20,10 +20,10 @@
     var uniqueId = (function () {
   
   var module = function () {
-    var output = '0';
-    while ( !isNaN(output) )                   output  = module.randomChar(); // First char must not be numeric
-    while ( output.length < module.minLength ) output += module.randomChar(); // Satisfy minimum length
-    while ( document.getElementById(output) )  output += module.randomChar(); // And uniqueness
+    var output = module.randomChar();
+    while ( !isNaN(output) )                   { output  = module.randomChar(); } // First char must not be numeric
+    while ( output.length < module.minLength ) { output += module.randomChar(); } // Satisfy minimum length
+    while ( document.getElementById(output) )  { output += module.randomChar(); } // And uniqueness
     return output;
   };
   
