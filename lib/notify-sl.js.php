@@ -1,4 +1,4 @@
-(function ( factory, exports ) {
+(function ( factory ) {
 
     // Use requirejs if possible
     if ( (typeof define == 'function') && define.amd ) {
@@ -6,7 +6,7 @@
     }
 
     // Let's export it the normal way
-    exports.notifysl = factory(jq);
+    this.notifysl = factory();
 
 })(function () {
 
@@ -170,11 +170,12 @@
         if ( options.buttons ) {
             var firstButton = true;
             Object.keys(options.buttons).forEach(function(key) {
-                var button = document.createElement('BUTTON');
+                var button = document.createElement('BUTTON'),
+                    value  = options.buttons[key];
                 button.className = button.className || '';
                 button.className += ' btn';
                 button.className += ' btn-default';
-                button.appendChild(document.createTextNode(notify.trigger('locale', text)));
+                button.appendChild(document.createTextNode(notify.trigger('locale', key)));
                 if ( firstButton ) {
                     button.className += ' btn-primary';
                     firstButton = false;

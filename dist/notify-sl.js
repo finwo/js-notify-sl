@@ -1,5 +1,5 @@
-// Build by finwo @ ma 22 jan 2018 13:51:48 CET
-(function ( factory, exports ) {
+// Build by finwo @ di 4 sep 2018 12:32:35 CEST
+(function ( factory ) {
 
     // Use requirejs if possible
     if ( (typeof define == 'function') && define.amd ) {
@@ -7,7 +7,7 @@
     }
 
     // Let's export it the normal way
-    exports.notifysl = factory(jq);
+    this.notifysl = factory();
 
 })(function () {
 
@@ -206,11 +206,12 @@
         if ( options.buttons ) {
             var firstButton = true;
             Object.keys(options.buttons).forEach(function(key) {
-                var button = document.createElement('BUTTON');
+                var button = document.createElement('BUTTON'),
+                    value  = options.buttons[key];
                 button.className = button.className || '';
                 button.className += ' btn';
                 button.className += ' btn-default';
-                button.appendChild(document.createTextNode(notify.trigger('locale', text)));
+                button.appendChild(document.createTextNode(notify.trigger('locale', key)));
                 if ( firstButton ) {
                     button.className += ' btn-primary';
                     firstButton = false;
