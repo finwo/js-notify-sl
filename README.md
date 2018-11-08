@@ -17,7 +17,7 @@ Because most don't provide a clear interface AND are theme-able with simple css.
 ## Installation
 
 ```
-bower install --save notify-sl
+npm install --save notify-sl
 ```
 
 ---
@@ -57,6 +57,10 @@ notifysl.open({
   title: 'notification title'
 });
 ```
+
+### Node.JS
+
+Sorry, this package is not intended for usage outside of a browser.
 
 ## Contributing
 
