@@ -141,7 +141,7 @@
     // Close a single notification
     function close( box, callback ) {
         delete notify.openBoxes[ box.id ];
-        box.style.right = `-${box.offsetWidth}px`;
+        box.style.right = '-' + box.offsetWidth + 'px';
         setTimeout(function () {
             if ( typeof box.dataset.cb == 'function' ) {
                 box.dataset.cb(false);

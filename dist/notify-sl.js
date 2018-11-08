@@ -1,4 +1,4 @@
-// Build by finwo @ di 4 sep 2018 15:38:03 CEST
+// Build by finwo @ do 8 nov 2018 15:43:44 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -177,7 +177,7 @@
     // Close a single notification
     function close( box, callback ) {
         delete notify.openBoxes[ box.id ];
-        box.style.right = `-${box.offsetWidth}px`;
+        box.style.right = '-' + box.offsetWidth + 'px';
         setTimeout(function () {
             if ( typeof box.dataset.cb == 'function' ) {
                 box.dataset.cb(false);

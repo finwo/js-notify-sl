@@ -1,4 +1,4 @@
-UGLIJS := $(shell bash -c "command -v uglify | head -n 1")
+UGLIJS := $(shell bash -c "command -v uglify uglifyjs | head -n 1")
 
 dist: normal minified
 
