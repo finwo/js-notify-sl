@@ -1,4 +1,4 @@
-// Build by finwo @ ma 12 nov 2018 16:02:29 CET
+// Build by finwo @ ma 12 nov 2018 16:38:28 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -61,7 +61,7 @@
       });
     },
     on: function(name, callback) {
-      (this[listeners]=this[listeners][name]||[]).push(callback);
+      (this[listeners][name]=this[listeners][name]||[]).push(callback);
       return this;
     }
   };

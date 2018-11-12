@@ -26,7 +26,7 @@
       });
     },
     on: function(name, callback) {
-      (this[listeners]=this[listeners][name]||[]).push(callback);
+      (this[listeners][name]=this[listeners][name]||[]).push(callback);
       return this;
     }
   };
