@@ -1,4 +1,4 @@
-// Build by finwo @ ma 12 nov 2018 15:41:22 CET
+// Build by finwo @ ma 12 nov 2018 16:02:29 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -47,6 +47,13 @@
     return subject;
   };
   apply.fn = {
+    trigger: function(name,data) {
+      data = data || true;
+      (this[listeners][name]||[]).forEach(function(cb) {
+        data = data && cb(data);
+      });
+      return data;
+    },
     emit: function(name,args) {
       args = [].slice.call(arguments);
       (this[listeners][name]||[]).forEach(function(cb) {
@@ -58,7 +65,6 @@
       return this;
     }
   };
-  apply.fn.trigger = apply.fn.emit;
   return apply;
 })()
     ;
