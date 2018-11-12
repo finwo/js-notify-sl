@@ -145,7 +145,7 @@
     // Close a single notification
     function close( box, callback ) {
         delete notify.openBoxes[ box.id ];
-        box.style.right = '-' + box.offsetWidth + 'px';
+        box.style.right = '-' + (box.offsetWidth+3) + 'px';
         setTimeout(function () {
             if ( typeof box.dataset.cb === 'function' ) {
                 box.dataset.cb(false);
@@ -287,7 +287,7 @@
 
         // Animate into view
         box.style.left       = '-100%';
-        box.style.right      = -box.offsetWidth;
+        box.style.right      = '-' + (box.offsetWidth + 3) + 'px';
         box.style.left       = '';
         box.style.transition = 'right ' + notify.animateDuration + 'ms ease';
         setTimeout(function () {
