@@ -1,19 +1,11 @@
 (function () {
-  
   var module = function () {
-    var output = module.randomChar();
-    while ( !isNaN(output) )                   { output  = module.randomChar(); } // First char must not be numeric
-    while ( output.length < module.minLength ) { output += module.randomChar(); } // Satisfy minimum length
-    while ( document.getElementById(output) )  { output += module.randomChar(); } // And uniqueness
+    var output = Math.floor(Math.random()*36).toString(36);
+    while ( !isNaN(output)                   ) { output  = Math.floor(Math.random()*36   ).toString(36); } // First char must not be numeric
+    while ( output.length < module.minLength ) { output += Math.floor(Math.random()*36*36).toString(36); } // Satisfy minimum length
+    while ( document.getElementById(output)  ) { output += Math.floor(Math.random()*36*36).toString(36); } // And uniqueness
     return output;
   };
-  
-  module.randomChar = function () {
-    return module.alphabet.charAt(Math.round(Math.random() * (module.alphabet.length - 1)));
-  };
   module.minLength  = 8;
-  module.alphabet   = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-  
   return module;
-  
 })()

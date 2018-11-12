@@ -1,11 +1,11 @@
-// Build by finwo @ ma 12 nov 2018 14:37:32 CET
+// Build by finwo @ ma 12 nov 2018 15:29:05 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
 
     // Use requirejs if possible
-    if ( (typeof define == 'function') && define.amd ) {
-        return define('notify-sl', factory);
+    if ( (typeof define === 'function') && define.amd ) {
+        return define(factory);
     }
 
     // Export for browser/node
@@ -19,44 +19,47 @@
     // Generates a unique ID on the page
     var uniqueId =
 (function () {
-  
   var module = function () {
-    var output = module.randomChar();
-    while ( !isNaN(output) )                   { output  = module.randomChar(); } // First char must not be numeric
-    while ( output.length < module.minLength ) { output += module.randomChar(); } // Satisfy minimum length
-    while ( document.getElementById(output) )  { output += module.randomChar(); } // And uniqueness
+    var output = Math.floor(Math.random()*36).toString(36);
+    while ( !isNaN(output)                   ) { output  = Math.floor(Math.random()*36   ).toString(36); } // First char must not be numeric
+    while ( output.length < module.minLength ) { output += Math.floor(Math.random()*36*36).toString(36); } // Satisfy minimum length
+    while ( document.getElementById(output)  ) { output += Math.floor(Math.random()*36*36).toString(36); } // And uniqueness
     return output;
   };
-  
-  module.randomChar = function () {
-    return module.alphabet.charAt(Math.round(Math.random() * (module.alphabet.length - 1)));
-  };
   module.minLength  = 8;
-  module.alphabet   = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-  
   return module;
-  
 })()
     ;
 
     // Allow attaching events to almost any object
     var eventObject =
-function(sourceObject) {
-  var listeners = {};
-  sourceObject = sourceObject || {};
-  sourceObject.trigger = function(name, data) {
-    data = ( typeof data == 'string' ) ? data : data || true;
-    (listeners[name]||[]).forEach(function(callback) {
-      data = data && callback(data);
-    });
-    return data;
+(function() {
+  var listeners = ('function' === typeof Symbol) ? Symbol('listeners') : (function() {
+    var i = 12, output = '\0';
+    while (i--)
+      output += Math.floor(Math.random() * 36 * 36).toString(36);
+    return output;
+  })();
+  var apply = function(subject) {
+    subject = subject || {};
+    subject[listeners] = {};
+    subject.__proto__ = Object.assign({},subject.__proto__,apply.fn);
   };
-  sourceObject.on = function(name, callback) {
-    (listeners[name]=listeners[name]||[]).push(callback);
-    return sourceObject;
+  apply.fn = {
+    emit: function(name,args) {
+      args = [].slice.call(arguments);
+      (this[listeners][name]||[]).forEach(function(cb) {
+        cb.apply(undefined,args);
+      });
+    },
+    on: function(name, callback) {
+      (this[listeners]=this[listeners][name]||[]).push(callback);
+      return this;
+    }
   };
-  return sourceObject;
-}
+  apply.fn.trigger = apply.fn.emit;
+  return apply;
+})()
     ;
 
     // Helper functions
@@ -70,7 +73,7 @@ function(sourceObject) {
 
     function append( element, contents ) {
         if ( Array.isArray(contents) ) { return contents.map(append.bind(null,element)); }
-        if ( 'string' == typeof contents ) { return element.innerHTML += contents; }
+        if ( 'string' === typeof contents ) { return element.innerHTML += contents; }
         if ( contents instanceof Node ) { return element.appendChild(contents); }
         return false;
     }
@@ -78,7 +81,7 @@ function(sourceObject) {
     function on( element, event, handler ) {
         if ( Array.isArray(event) )   { return event.map(function(e) { return on(element,e,handler); }); }
         if ( Array.isArray(handler) ) { return handler.map(on.bind(null,element,event)); }
-        if ( 'function' != typeof handler ) { return false; }
+        if ( 'function' !== typeof handler ) { return false; }
         if ( element.addEventListener ) {
             return element.addEventListener(event, handler);
         } else if ( element.attachEvent ) {
@@ -181,7 +184,7 @@ function(sourceObject) {
         delete notify.openBoxes[ box.id ];
         box.style.right = '-' + box.offsetWidth + 'px';
         setTimeout(function () {
-            if ( typeof box.dataset.cb == 'function' ) {
+            if ( typeof box.dataset.cb === 'function' ) {
                 box.dataset.cb(false);
             }
             if ( box.parentNode ) {
@@ -337,7 +340,7 @@ function(sourceObject) {
     // A simple alert
     notify.alert = function ( message, title, data, callback ) {
 
-        if ( typeof data == 'function' ) {
+        if ( typeof data === 'function' ) {
             callback = data;
             data     = {};
         }
@@ -358,7 +361,7 @@ function(sourceObject) {
     // Confirm... Yes or no
     notify.confirm = function ( message, title, data, callback ) {
 
-        if ( typeof data == 'function' ) {
+        if ( typeof data === 'function' ) {
             callback = data;
             data     = {};
         }
@@ -377,7 +380,7 @@ function(sourceObject) {
 
     notify.prompt = function ( message, title, data, callback ) {
 
-        if ( typeof data == 'function' ) {
+        if ( typeof data === 'function' ) {
             callback = data;
             data     = {};
         }

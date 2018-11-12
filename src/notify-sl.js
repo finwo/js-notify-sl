@@ -3,8 +3,8 @@
 (function ( factory ) {
 
     // Use requirejs if possible
-    if ( (typeof define == 'function') && define.amd ) {
-        return define('notify-sl', factory);
+    if ( (typeof define === 'function') && define.amd ) {
+        return define(factory);
     }
 
     // Export for browser/node
@@ -36,7 +36,7 @@
 
     function append( element, contents ) {
         if ( Array.isArray(contents) ) { return contents.map(append.bind(null,element)); }
-        if ( 'string' == typeof contents ) { return element.innerHTML += contents; }
+        if ( 'string' === typeof contents ) { return element.innerHTML += contents; }
         if ( contents instanceof Node ) { return element.appendChild(contents); }
         return false;
     }
@@ -44,7 +44,7 @@
     function on( element, event, handler ) {
         if ( Array.isArray(event) )   { return event.map(function(e) { return on(element,e,handler); }); }
         if ( Array.isArray(handler) ) { return handler.map(on.bind(null,element,event)); }
-        if ( 'function' != typeof handler ) { return false; }
+        if ( 'function' !== typeof handler ) { return false; }
         if ( element.addEventListener ) {
             return element.addEventListener(event, handler);
         } else if ( element.attachEvent ) {
@@ -147,7 +147,7 @@
         delete notify.openBoxes[ box.id ];
         box.style.right = '-' + box.offsetWidth + 'px';
         setTimeout(function () {
-            if ( typeof box.dataset.cb == 'function' ) {
+            if ( typeof box.dataset.cb === 'function' ) {
                 box.dataset.cb(false);
             }
             if ( box.parentNode ) {
@@ -303,7 +303,7 @@
     // A simple alert
     notify.alert = function ( message, title, data, callback ) {
 
-        if ( typeof data == 'function' ) {
+        if ( typeof data === 'function' ) {
             callback = data;
             data     = {};
         }
@@ -324,7 +324,7 @@
     // Confirm... Yes or no
     notify.confirm = function ( message, title, data, callback ) {
 
-        if ( typeof data == 'function' ) {
+        if ( typeof data === 'function' ) {
             callback = data;
             data     = {};
         }
@@ -343,7 +343,7 @@
 
     notify.prompt = function ( message, title, data, callback ) {
 
-        if ( typeof data == 'function' ) {
+        if ( typeof data === 'function' ) {
             callback = data;
             data     = {};
         }
