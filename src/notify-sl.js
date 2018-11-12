@@ -16,15 +16,19 @@
 })(function () {
 
     // Generates a unique ID on the page
-    var uniqueId = <?php include("unique-id.js"); ?>;
+    var uniqueId =
+#include unique-id.js
+    ;
 
     // Allow attaching events to almost any object
-    var eventObject = <?php include("event-object.js"); ?>;
+    var eventObject =
+#include event-object.js
+    ;
 
     // Helper functions
     function getElement( tag, id ) {
         tag = tag.toUpperCase();
-        var element = document.getElementById(id) || document.createElement(tag);
+        var element = document.getElementById(id) || document.createElement(tag);1
         element.id = id;
         document.body.appendChild(element);
         return element;

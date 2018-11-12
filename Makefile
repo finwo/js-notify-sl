@@ -6,8 +6,7 @@ clean:
 	rm -rf dist
 
 normal:
-	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; php lib/notify-sl.js.php ; } > dist/notify-sl.js
+	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; script/template.sh src/notify-sl.js ; } > dist/notify-sl.js
 
-minified:
-	echo $(UGLIJS)
-	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; php lib/notify-sl.js.php | $(UGLIJS) ; } > dist/notify-sl.min.js
+minified: normal
+	mkdir -p dist ; { echo "// Build by" $$(whoami) "@" $$(date) ; cat dist/notify-sl.js | $(UGLIJS) ; } > dist/notify-sl.min.js

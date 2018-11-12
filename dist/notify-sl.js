@@ -1,4 +1,4 @@
-// Build by finwo @ do 8 nov 2018 15:43:44 CET
+// Build by finwo @ ma 12 nov 2018 14:37:32 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -17,7 +17,8 @@
 })(function () {
 
     // Generates a unique ID on the page
-    var uniqueId = (function () {
+    var uniqueId =
+(function () {
   
   var module = function () {
     var output = module.randomChar();
@@ -36,10 +37,11 @@
   return module;
   
 })()
-;
+    ;
 
     // Allow attaching events to almost any object
-    var eventObject = function(sourceObject) {
+    var eventObject =
+function(sourceObject) {
   var listeners = {};
   sourceObject = sourceObject || {};
   sourceObject.trigger = function(name, data) {
@@ -55,12 +57,12 @@
   };
   return sourceObject;
 }
-;
+    ;
 
     // Helper functions
     function getElement( tag, id ) {
         tag = tag.toUpperCase();
-        var element = document.getElementById(id) || document.createElement(tag);
+        var element = document.getElementById(id) || document.createElement(tag);1
         element.id = id;
         document.body.appendChild(element);
         return element;
