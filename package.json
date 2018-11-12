@@ -1,6 +1,6 @@
 {
   "name": "notify-sl",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Simple browser notification library",
   "main": "dist/notify-sl.min.js",
   "directories": {
