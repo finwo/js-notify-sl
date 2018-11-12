@@ -1,4 +1,4 @@
-// Build by finwo @ ma 12 nov 2018 15:29:05 CET
+// Build by finwo @ ma 12 nov 2018 15:41:22 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -44,6 +44,7 @@
     subject = subject || {};
     subject[listeners] = {};
     subject.__proto__ = Object.assign({},subject.__proto__,apply.fn);
+    return subject;
   };
   apply.fn = {
     emit: function(name,args) {

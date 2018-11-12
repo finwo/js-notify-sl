@@ -9,6 +9,7 @@
     subject = subject || {};
     subject[listeners] = {};
     subject.__proto__ = Object.assign({},subject.__proto__,apply.fn);
+    return subject;
   };
   apply.fn = {
     emit: function(name,args) {
