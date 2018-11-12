@@ -4,7 +4,7 @@
   "description": "Simple browser notification library",
   "main": "dist/notify-sl.min.js",
   "directories": {
-    "lib": "lib"
+    "lib": "src"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
