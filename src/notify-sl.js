@@ -81,35 +81,35 @@
           document.body;
 
     var style = {
-        container     : {
-            'padding' : '0',
-            'position': 'fixed',
-            'right'   : '0',
-            'top'     : '0',
-            'z-index' : '1060',
-        },
-        containerAfter: {
-            'clear'     : 'both',
-            'content'   : '"."',
-            'display'   : 'block',
-            'height'    : '0',
-            'visibility': 'hidden',
-        },
-        notification: {
-            'background': getStyle( testElement, 'backgroundColor' ),
-            //'border'    : '1px solid '+getStyle( testCard, 'color' ),
-            'box-shadow': '0 1px 2px rgba(0,0,0,0.5)',
-            'color'     : getStyle( testElement, 'color'),
-            'margin-top': '1em',
-            'padding'   : '1em',
-            'position'  : 'relative'
-        },
-        notificationParagraph: {
-            'margin-bottom': '1em'
-        },
-        notificationLastChild: {
-            'margin-bottom': '0'
-        }
+      container            : {
+        'padding' : '0',
+        'position': 'fixed',
+        'right'   : '0',
+        'top'     : '0',
+        'z-index' : '1060',
+      },
+      containerAfter       : {
+        'clear'     : 'both',
+        'content'   : '"."',
+        'display'   : 'block',
+        'height'    : '0',
+        'visibility': 'hidden',
+      },
+      notification         : {
+        'background'   : getStyle(testElement, 'backgroundColor'),
+        'border-radius': getStyle(testElement, 'borderRadius'),
+        'box-shadow'   : '0 1px 2px rgba(0,0,0,0.5)',
+        'color'        : getStyle(testElement, 'color'),
+        'margin-top'   : getStyle(testElement, 'margin'),
+        'padding'      : getStyle(testElement, 'padding'),
+        'position'     : 'relative'
+      },
+      notificationParagraph: {
+        'margin-bottom': getStyle(testElement, 'margin'),
+      },
+      notificationLastChild: {
+        'margin-bottom': '0',
+      }
     };
 
       // Build CSS element
