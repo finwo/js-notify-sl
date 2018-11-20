@@ -76,6 +76,7 @@
     // Element to fetch styling from
     var testElement =
           document.getElementById('notify-style') ||
+          (document.getElementsByClassName('card')||[])[0] ||
           (document.getElementsByTagName('main')||[])[0] ||
           (document.getElementsByTagName('form')||[])[0] ||
           document.body;

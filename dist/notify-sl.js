@@ -1,4 +1,4 @@
-// Build by finwo @ di 20 nov 2018 14:15:07 CET
+// Build by finwo @ di 20 nov 2018 15:00:11 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -120,6 +120,7 @@
     // Element to fetch styling from
     var testElement =
           document.getElementById('notify-style') ||
+          (document.getElementsByClassName('card')||[])[0] ||
           (document.getElementsByTagName('main')||[])[0] ||
           (document.getElementsByTagName('form')||[])[0] ||
           document.body;
