@@ -87,7 +87,7 @@
         'position': 'fixed',
         'right'   : '0',
         'top'     : '0',
-        'z-index' : '1060',
+        'z-index' : '10000000',
       },
       containerAfter       : {
         'clear'     : 'both',

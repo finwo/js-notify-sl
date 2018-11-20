@@ -1,4 +1,4 @@
-// Build by finwo @ di 20 nov 2018 15:00:11 CET
+// Build by finwo @ di 20 nov 2018 16:50:41 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -131,7 +131,7 @@
         'position': 'fixed',
         'right'   : '0',
         'top'     : '0',
-        'z-index' : '1060',
+        'z-index' : '10000000',
       },
       containerAfter       : {
         'clear'     : 'both',
