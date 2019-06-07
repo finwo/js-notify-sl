@@ -11,6 +11,8 @@
     <button id='buttonalert'>ALERT</button>
     <button id='buttonconfirm'>CONFIRM</button>
     <button id='buttonprompt'>PROMPT</button>
+    <button id='buttonfast'>FAST</button>
+    <button id='buttonslow'>SLOW</button>
     <script src="src/notify-sl.js"></script>
     <script>
       buttonalert.onclick = ()=>notifysl.alert('msg','title');
@@ -20,6 +22,8 @@
       buttonprompt.onclick = ()=>notifysl.prompt('msg','title',function(result) {
         notifysl.alert( 'result: ' + result , 'result', {timeout:2000});
       });
+      buttonfast.onclick = ()=>notifysl.alert('msg','title',{animationDuration:100});
+      buttonslow.onclick = ()=>notifysl.alert('msg','title',{animationDuration:2000});
     </script>
   </body>
 </html>

@@ -135,7 +135,7 @@
     var notification                = {id:uid()};
     notification.element            = getElement('div',notification.id);
     notification.callback           = options.callback || function(){};
-    notification.element.className += ' notify-box';
+    notification.element.className += ' notify-sl-notification';
     notification.animationDuration  = animationDuration;
 
     // Make sure we can close again
@@ -216,13 +216,14 @@
       data     = {};
     }
     return notify.open({
-      closeAll: false,
-      buttons : data.timeout || (data.buttons || { 'labels.ok': true }),
-      title   : title,
-      message : message,
-      callback: callback,
-      data    : data,
-      timeout : data.timeout || 0,
+      animationDuration: data.animationDuration || notify.animationDuration,
+      closeAll         : false,
+      buttons          : data.timeout || (data.buttons || { 'labels.ok': true }),
+      title            : title,
+      message          : message,
+      callback         : callback,
+      data             : data,
+      timeout          : data.timeout || 0,
     });
   };
 
@@ -235,12 +236,13 @@
       data     = {};
     }
     return notify.open({
-      closeAll: false,
-      buttons : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
-      title   : title,
-      message : message,
-      callback: callback,
-      data    : data,
+      animationDuration: data.animationDuration || notify.animationDuration,
+      closeAll         : false,
+      buttons          : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
+      title            : title,
+      message          : message,
+      callback         : callback,
+      data             : data,
     });
   };
 
@@ -272,11 +274,12 @@
     contents.push(elForm);
 
     return notify.open({
-      closeAll: true,
-      buttons: data.buttons || {'labels.ok':true,'labels.cancel':false},
-      contents: contents,
-      data: data,
-      callback: function(value) {
+      animationDuration: data.animationDuration || notify.animationDuration,
+      closeAll         : true,
+      buttons          : data.buttons || {'labels.ok':true,'labels.cancel':false},
+      contents         : contents,
+      data             : data,
+      callback         : function(value) {
         if (value) callback(elInput.value);
         else callback(false);
         return !!value;
