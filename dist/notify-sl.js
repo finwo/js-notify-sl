@@ -59,7 +59,7 @@
     notification.element.style.right = '-' + (notification.element.offsetWidth*2) + 'px';
     setTimeout(function() {
       notification.element.parentNode.removeChild(notification.element);
-    }, notify.animationDuration);
+    }, notification.animationDuration || notify.animationDuration);
   }
 
   function getStyle( property, element ) {
@@ -124,8 +124,9 @@
 
   // Open a new notification
   notify.open = function( options ) {
-    options = notify.trigger('open',Object.assign({},options));
-    var callback = options.callback || function(){};
+    options               = notify.trigger('open',Object.assign({},options));
+    var callback          = options.callback || function(){};
+    var animationDuration = options.animationDuration || notify.animationDuration;
 
     // Close other notifications if requested
     if(options.closeAll) notify.closeAll();
@@ -135,6 +136,7 @@
     notification.element            = getElement('div',notification.id);
     notification.callback           = options.callback || function(){};
     notification.element.className += ' notify-box';
+    notification.animationDuration  = animationDuration;
 
     // Make sure we can close again
     if ( (!options.buttons) && (!options.timeout) ) {
@@ -194,13 +196,13 @@
 
     // Animate into view
     notification.element.style.right      = '-' + (notification.element.offsetWidth*2) + 'px';
-    notification.element.style.transition = 'right ' + notify.animationDuration + 'ms ease';
+    notification.element.style.transition = 'right ' + animationDuration + 'ms ease';
     setTimeout(function () {
       notification.element.style.right = '1em';
       if ( options.timeout ) {
         setTimeout(function() {
           close(notification, callback.bind(null, 'timeout'));
-        }, options.timeout);
+        }, options.timeout + animationDuration);
       }
     }, 10);
 
