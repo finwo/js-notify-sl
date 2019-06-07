@@ -167,7 +167,9 @@
       append(title  ,document.createTextNode(notify.trigger('locale',options.title  ||'')));
       append(message,document.createTextNode(notify.trigger('locale',options.message||'')));
       title.style.marginTop = 0;
+      title.style.paddingTop = 0;
       message.style.marginBottom = 0;
+      message.style.paddingBottom = 0;
       if (title.innerHTML  ) append(notification.element,title  );
       if (message.innerHTML) append(notification.element,message);
     }
