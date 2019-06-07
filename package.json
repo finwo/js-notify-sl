@@ -3,9 +3,6 @@
   "version": "2.0.7",
   "description": "Simple browser notification library",
   "main": "dist/notify-sl.min.js",
-  "directories": {
-    "lib": "src"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "make"
@@ -20,8 +17,5 @@
     "url": "https://github.com/finwo/js-notify-sl/issues"
   },
   "homepage": "https://finwo.github.io/js-notify-sl",
-  "dependencies": {},
-  "devDependencies": {
-    "uglify-js": "^3.4.9"
-  }
+  "dependencies": {}
 }

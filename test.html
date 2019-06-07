@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      input {
+        margin-bottom: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <button id='buttonalert'>ALERT</button>
+    <button id='buttonconfirm'>CONFIRM</button>
+    <button id='buttonprompt'>PROMPT</button>
+    <script src="src/notify-sl.js"></script>
+    <script>
+      buttonalert.onclick = ()=>notifysl.alert('msg','title');
+      buttonconfirm.onclick = ()=>notifysl.confirm('msg','title',function(result) {
+        notifysl.alert( result ? 'yes' : 'no', 'result', {timeout:2000});
+      });
+      buttonprompt.onclick = ()=>notifysl.prompt('msg','title',function(result) {
+        notifysl.alert( 'result: ' + result , 'result', {timeout:2000});
+      });
+    </script>
+  </body>
+</html>

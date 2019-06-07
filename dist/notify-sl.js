@@ -1,4 +1,3 @@
-// Build by finwo @ di 20 nov 2018 16:50:41 CET
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
@@ -16,423 +15,273 @@
 
 })(function () {
 
-    // Generates a unique ID on the page
-    var uniqueId =
-(function () {
-  var module = function () {
-    var output = Math.floor(Math.random()*36).toString(36);
-    while ( !isNaN(output)                   ) { output  = Math.floor(Math.random()*36   ).toString(36); } // First char must not be numeric
-    while ( output.length < module.minLength ) { output += Math.floor(Math.random()*36*36).toString(36); } // Satisfy minimum length
-    while ( document.getElementById(output)  ) { output += Math.floor(Math.random()*36*36).toString(36); } // And uniqueness
-    return output;
-  };
-  module.minLength  = 8;
-  return module;
-})()
-    ;
-
-    // Allow attaching events to almost any object
-    var eventObject =
-(function() {
-  var listeners = ('function' === typeof Symbol) ? Symbol('listeners') : (function() {
-    var i = 12, output = '\0';
-    while (i--)
-      output += Math.floor(Math.random() * 36 * 36).toString(36);
-    return output;
-  })();
-  var apply = function(subject) {
-    subject = subject || {};
-    subject[listeners] = {};
-    subject.__proto__ = Object.assign({},subject.__proto__,apply.fn);
-    return subject;
-  };
-  apply.fn = {
-    trigger: function(name,data) {
+  function hooked(obj) {
+    var list = {};
+    obj = obj || {};
+    obj.on= function(name,fn) {
+      if ('function' !== typeof fn) return obj;
+      (list[name]=list[name]||[]).push(fn);
+      return obj;
+    };
+    obj.trigger = function(name,data) {
+      if(!list[name]) return data;
       data = data || true;
-      (this[listeners][name]||[]).forEach(function(cb) {
-        data = data && cb(data);
+      var self = this;
+      args = [].slice.call(arguments);
+      args.shift();
+      list[name].forEach(function(fn) {
+        data = fn.call(self,data);
       });
       return data;
-    },
-    emit: function(name,args) {
-      args = [].slice.call(arguments);
-      (this[listeners][name]||[]).forEach(function(cb) {
-        cb.apply(undefined,args);
-      });
-    },
-    on: function(name, callback) {
-      (this[listeners][name]=this[listeners][name]||[]).push(callback);
-      return this;
-    }
-  };
-  return apply;
-})()
-    ;
+    };
+    return obj;
+  }
 
-    // Helper functions
-    function getElement( tag, id ) {
-        tag = tag.toUpperCase();
-        var element = document.getElementById(id) || document.createElement(tag);1
-        element.id = id;
-        document.body.appendChild(element);
-        return element;
-    }
+  function uid(length) {
+    length = length || 8;
+    var output = 0;
+    while(!isNaN(output))                  output  = Math.floor(Math.random()*36).toString(36);
+    while(output.length<length)            output += Math.floor(Math.random()*36).toString(36);
+    while(document.getElementById(output)) output += Math.floor(Math.random()*36).toString(36);
+    return output;
+  }
 
-    function append( element, contents ) {
-        if ( Array.isArray(contents) ) { return contents.map(append.bind(null,element)); }
-        if ( 'string' === typeof contents ) { return element.innerHTML += contents; }
-        if ( contents instanceof Node ) { return element.appendChild(contents); }
-        return false;
-    }
+  function getElement( tag, id ) {
+    tag = tag.toUpperCase();
+    var element = document.getElementById(id) || document.createElement(tag);
+    element.id = id;
+    document.body.appendChild(element);
+    return element;
+  }
 
-    function on( element, event, handler ) {
-        if ( Array.isArray(event) )   { return event.map(function(e) { return on(element,e,handler); }); }
-        if ( Array.isArray(handler) ) { return handler.map(on.bind(null,element,event)); }
-        if ( 'function' !== typeof handler ) { return false; }
-        if ( element.addEventListener ) {
-            return element.addEventListener(event, handler);
-        } else if ( element.attachEvent ) {
-            return element.attachEvent( 'on' + event, handler );
-        } else {
-            return false;
-        }
-    }
+  function close( notification, callback ) {
+    delete notify.openNotifications[ notification.id ];
+    notification.element.style.right = '-' + (notification.element.offsetWidth*2) + 'px';
+    setTimeout(function() {
+      notification.element.parentNode.removeChild(notification.element);
+    }, notify.animationDuration);
+  }
 
-    function getStyle( element, property ) {
-      if ( element.currentStyle ) {
-        return element.currentStyle[property];
-      }
-      return document.defaultView.getComputedStyle(element)[property];
-    }
+  function getStyle( property, element ) {
+    element = element ||
+      document.getElementById('notify-style') ||
+      (document.getElementsByClassName('card')||[])[0] ||
+      (document.getElementsByClassName('main')||[])[0] ||
+      (document.getElementsByClassName('form')||[])[0] ||
+      document.body;
+    if ( element.currentStyle ) return element.currentStyle[property];
+    return document.defaultView.getComputedStyle(element)[property];
+  }
 
-    // Our module
-    var notify = eventObject(function () {
-        return notify.open.apply(null, arguments);
+  function append( element, contents ) {
+    if ( Array.isArray(contents) ) { return contents.map(append.bind(null,element)); }
+    if ( 'string' === typeof contents ) { return element.innerHTML += contents; }
+    if ( contents instanceof Node ) { return element.appendChild(contents); }
+    return false;
+  }
+
+  function on( element, event, handler ) {
+    if ( Array.isArray(event) )   { return event.map(function(e) { return on(element,e,handler); }); }
+    if ( Array.isArray(handler) ) { return handler.map(on.bind(null,element,event)); }
+    if ( 'function' !== typeof handler ) { return false; }
+    if ( element.addEventListener ) {
+      return element.addEventListener(event, handler);
+    } else if ( element.attachEvent ) {
+      return element.attachEvent( 'on' + event, handler );
+    } else {
+      return false;
+    }
+  }
+
+  var notify = hooked(function() {
+    return notify.alert.apply(this,arguments);
+  });
+
+  // Settings
+  notify.animationDuration = 250;
+
+  // A list of all open notifications
+  notify.openNotifications = {};
+
+  // Style to overwrite in all notifications
+  notify.style = {};
+
+  // Create a new container to put all notification in
+  var container = getElement( 'div', 'notify-sl-container' );
+  Object.assign(container.style,{
+    background: 'transparent',
+    position  : 'fixed',
+    right     : '0px',
+    top       : '0px',
+  });
+
+  // Close all notifications
+  notify.closeAll = function() {
+    Object.keys(notify.openNotifications).forEach(function(key) {
+      close(notify.openNotifications[key]);
     });
+  };
 
-    // Fetch some stuff for styling
-    function compileStyle(style) {
-        return Object.keys(style).map(function(property) {
-          return property+':'+style[property];
-        }).join(';');
+  // Open a new notification
+  notify.open = function( options ) {
+    options = notify.trigger('open',Object.assign({},options));
+    var callback = options.callback || function(){};
+
+    // Close other notifications if requested
+    if(options.closeAll) notify.closeAll();
+
+    // Build everything here
+    var notification                = {id:uid()};
+    notification.element            = getElement('div',notification.id);
+    notification.callback           = options.callback || function(){};
+    notification.element.className += ' notify-box';
+
+    // Make sure we can close again
+    if ( (!options.buttons) && (!options.timeout) ) {
+      throw new Error("Either buttons or timeout required");
     }
 
-    // Element to fetch styling from
-    var testElement =
-          document.getElementById('notify-style') ||
-          (document.getElementsByClassName('card')||[])[0] ||
-          (document.getElementsByTagName('main')||[])[0] ||
-          (document.getElementsByTagName('form')||[])[0] ||
-          document.body;
+    // TODO: default styling
+    notification.element.style.background   = getStyle('background') || '#FFF';
+    notification.element.style.borderRadius = getStyle('borderRadius') || '0.2em';
+    notification.element.style.boxShadow    = '0 1px 2px rgba(0,0,0,0.5)';
+    notification.element.style.color        = getStyle('color') || '#222';
+    notification.element.style.marginTop    = '1em';
+    notification.element.style.padding      = getStyle('padding') || '1em';
+    notification.element.style.position     = 'relative';
 
-    var style = {
-      container            : {
-        'padding' : '0',
-        'position': 'fixed',
-        'right'   : '0',
-        'top'     : '0',
-        'z-index' : '10000000',
-      },
-      containerAfter       : {
-        'clear'     : 'both',
-        'content'   : '"."',
-        'display'   : 'block',
-        'height'    : '0',
-        'visibility': 'hidden',
-      },
-      notification         : {
-        'background'   : getStyle(testElement, 'backgroundColor'),
-        'border-radius': getStyle(testElement, 'borderRadius'),
-        'box-shadow'   : '0 1px 2px rgba(0,0,0,0.5)',
-        'color'        : getStyle(testElement, 'color'),
-        'margin-top'   : getStyle(testElement, 'margin'),
-        'padding'      : getStyle(testElement, 'padding'),
-        'position'     : 'relative'
-      },
-      notificationParagraph: {
-        'margin-bottom': getStyle(testElement, 'margin'),
-      },
-      notificationLastChild: {
-        'margin-bottom': '0',
+    // Add user styling
+    Object.assign(notification.element,notify.style,options.style||{});
+
+    // Add functional styling
+    options.data = notify.trigger('data', options.data || {});
+
+    // Either provided content or header/body
+    if (options.contents) {
+      append(notification.element,options.contents);
+    } else {
+      var title   = document.createElement('h2');
+      var message = document.createElement('p');
+      append(title  ,document.createTextNode(notify.trigger('locale',options.title  ||'')));
+      append(message,document.createTextNode(notify.trigger('locale',options.message||'')));
+      title.style.marginTop = 0;
+      message.style.marginBottom = 0;
+      if (title.innerHTML  ) append(notification.element,title  );
+      if (message.innerHTML) append(notification.element,message);
+    }
+
+    // Handle buttons
+    if (options.buttons) {
+      var firstButton = true;
+      Object.keys(options.buttons).forEach(function(key) {
+        var btn  = document.createElement('button');
+        btn.className = 'btn btn-default';
+        if (firstButton) { btn.className += ' btn-primary'; firstButton = false; }
+        btn.innerText = notify.trigger('locale',key);
+        btn.value     = options.buttons[key];
+        if (!options.contents) btn.style.marginTop = '1em';
+        append(notification.element,btn);
+        on(btn,'click',[
+          callback.bind(null,options.buttons[key]),
+          close.bind(null,notification),
+        ]);
+      });
+    }
+
+    // Add
+    append(container,notification.element);
+    notify.openNotifications[notification.id] = notification;
+
+    // Animate into view
+    notification.element.style.right      = '-' + (notification.element.offsetWidth*2) + 'px';
+    notification.element.style.transition = 'right ' + notify.animationDuration + 'ms ease';
+    setTimeout(function () {
+      notification.element.style.right = '1em';
+      if ( options.timeout ) {
+        setTimeout(function() {
+          close(notification, callback.bind(null, 'timeout'));
+        }, options.timeout);
       }
-    };
+    }, 10);
 
-      // Build CSS element
-    getElement('style', 'notify-sl-css').innerHTML =
-        '#notify-sl-container {'          +
-            compileStyle(style.container) +
-        '}' +
+  };
 
-        '#notify-sl-container:after {'         +
-            compileStyle(style.containerAfter) +
-        '}' +
-
-        '#notify-sl-container .notify-box > p {'      +
-            compileStyle(style.notificationParagraph) +
-        '}' +
-
-        '#notify-sl-container .notify-box {' +
-            compileStyle(style.notification) +
-        '}' +
-
-        '#notify-sl-container .notify-box > :last-child {' +
-            compileStyle(style.notificationLastChild)      +
-        '}';
+  // Open a new alert-style notification
+  notify.alert = function( message, title, data, callback ) {
+    data = data || {};
+    if ('function' === typeof data) {
+      callback = data;
+      data     = {};
+    }
+    return notify.open({
+      closeAll: false,
+      buttons : data.timeout || (data.buttons || { 'labels.ok': true }),
+      title   : title,
+      message : message,
+      callback: callback,
+      data    : data,
+      timeout : data.timeout || 0,
+    });
+  };
 
 
-    // Create a container for our notifications
-    var container = getElement('div', 'notify-sl-container');
+  // Open a new confirm-style notification
+  notify.confirm = function(message, title, data, callback) {
+    data = data || {};
+    if ('function' === typeof data) {
+      callback = data;
+      data     = {};
+    }
+    return notify.open({
+      closeAll: false,
+      buttons : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
+      title   : title,
+      message : message,
+      callback: callback,
+      data    : data,
+    });
+  };
 
-    notify.animateDuration = 250;
-    notify.openBoxes       = {};
-    notify.style           = {};
-
-    // Close a single notification
-    function close( box, callback ) {
-        delete notify.openBoxes[ box.id ];
-        box.style.right = '-' + (box.offsetWidth+3) + 'px';
-        setTimeout(function () {
-            if ( typeof box.dataset.cb === 'function' ) {
-                box.dataset.cb(false);
-            }
-            if ( box.parentNode ) {
-                box.parentNode.removeChild(box);
-            }
-            if ( typeof callback === 'function' ) {
-                callback();
-            }
-        }, notify.animateDuration);
+  notify.prompt = function(message, title, data, callback) {
+    data = data || {};
+    if ('function' === typeof data) {
+      callback = data;
+      data     = {};
     }
 
-    // Close all notifications
-    notify.closeAll = function () {
-        Object.keys(notify.openBoxes).forEach(function ( key ) {
-            close(notify.openBoxes[ key ]);
-        });
-    };
+    var contents = [];
 
-    // Open a notification
-    notify.open = function ( options ) {
+    var elTitle   = document.createElement('h2');
+    var elMessage = document.createElement('p');
+    append(elTitle  ,document.createTextNode(notify.trigger('locale',title  ||'')));
+    append(elMessage,document.createTextNode(notify.trigger('locale',message||'')));
 
-        options = notify.trigger('open', options);
+    var elForm  = document.createElement('form');
+    var elInput = document.createElement('input');
+    elForm.setAttribute('onsubmit','return false;');
+    Object.keys(data).forEach(function(key) {
+      elInput.setAttribute(key,data[key]);
+    });
+    elInput.setAttribute('name','prompt');
+    append(elForm,elInput);
 
-        if ( options.closeAll ) {
-            notify.closeAll();
-        }
+    if (elTitle.innerHTML  ) contents.push(elTitle  );
+    if (elMessage.innerHTML) contents.push(elMessage);
+    contents.push(elForm);
 
-        var box      = document.createElement("div"),
-            callback = options.callback || function () {};
+    return notify.open({
+      closeAll: true,
+      buttons: data.buttons || {'labels.ok':true,'labels.cancel':false},
+      contents: contents,
+      data: data,
+      callback: function(value) {
+        if (value) callback(elInput.value);
+        else callback(false);
+        return !!value;
+      }
+    });
+  };
 
-        box.id          = uniqueId();
-        box.dataset.cb  = callback;
-        box.className  += ' notify-box';
-
-        // Make sure we can close again
-        if ( !options.buttons && !options.timeout ) {
-            throw new Error("Either buttons or timeout required");
-        }
-
-        // Run some styling on the box
-        box.style = notify.style || {};
-        if ( options.style ) {
-            Object.keys(options.style).forEach(function(key) {
-                box.style[key] = options.style[key];
-            });
-        }
-
-        // Allow transformations on the data
-        options.data = notify.trigger('data', options.data || {});
-
-        // Either provided contents or texts
-        if ( options.contents ) {
-            append(box,options.contents);
-        } else {
-            // Build title/message structure
-            var title    = document.createElement("h2"),
-                message  = document.createElement("p");
-            //translate sentence
-            append(title,document.createTextNode(notify.trigger('locale', options.title || "")));
-            append(message,document.createTextNode(notify.trigger('locale', options.message || "")));
-            title.style = title.style || {};
-            title.style.marginTop = 0;
-            // Append message to notification box
-            if ( title.innerHTML   ) { append(box,title);   }
-            if ( message.innerHTML ) { append(box,message); }
-        }
-
-        // Handle buttons
-        if ( options.buttons ) {
-            var firstButton = true;
-
-            if ( Array.isArray(options.buttons) ) {
-              options.buttons.forEach(function(button) {
-                var btn = document.createElement('BUTTON');
-                btn.className  = 'btn btn-default';
-                if(firstButton) {
-                  btn.className += ' btn-primary';
-                  firstButton = false;
-                }
-                if(Array.isArray(button)) {
-                  btn.innerText = notify.trigger('locale',button[0]);
-                  on(btn,'click',[
-                    callback.bind(null,button[1]),
-                    function(){box.dataset.cb='';close(box);}
-                  ]);
-                  if( ('object' === typeof button[2]) && Array.isArray(button[2]) ) {
-                    btn.className += ' ' + button[2].join(' ');
-                  }
-                } else {
-                  btn.innerText = notify.trigger('locale',button.text||'');
-                  on(btn,'click',[
-                    callback.bind(null,button.value||''),
-                    function(){box.dataset.cb='';close(box);}
-                  ]);
-                  if(Array.isArray(button.class)) {
-                    btn.className += ' '+button.class.join(' ');
-                  }
-                }
-                append(box,btn);
-              });
-            } else {
-              Object.keys(options.buttons).forEach(function(key) {
-                var button = document.createElement('BUTTON'),
-                    value  = options.buttons[key];
-                button.className = button.className || '';
-                switch(typeof value) {
-                  case 'object':
-                    button.className += ' '+(value.class||'');
-                    button.appendChild(document.createTextNode(notify.trigger('locale', value.text || key)));
-                    value = ( value.value || key );
-                    break;
-                  default:
-                    button.appendChild(document.createTextNode(notify.trigger('locale', key)));
-                    break;
-                }
-                button.className += ' btn';
-                button.className += ' btn-default';
-                if ( firstButton ) {
-                  button.className += ' btn-primary';
-                  firstButton = false;
-                }
-                on(button,'click', [
-                  callback.bind(null,value),
-                  function() {
-                    box.dataset.cb = '';
-                    close(box);
-                  }
-                ]);
-                append(box,button);
-              });
-            }
-        }
-
-        // Let's show the box
-        append(container,box);
-        notify.openBoxes[ box.id ] = box;
-
-        // Animate into view
-        box.style.left       = '-100%';
-        box.style.right      = '-' + (box.offsetWidth + 3) + 'px';
-        box.style.left       = '';
-        box.style.transition = 'right ' + notify.animateDuration + 'ms ease';
-        setTimeout(function () {
-            box.style.right = '1em';
-            if ( options.timeout ) {
-                setTimeout(function() {
-                    close(box, callback.bind(null, 'timeout'));
-                }, options.timeout);
-            }
-        }, 10);
-    };
-
-    // A simple alert
-    notify.alert = function ( message, title, data, callback ) {
-
-        if ( typeof data === 'function' ) {
-            callback = data;
-            data     = {};
-        }
-
-        data = data || {};
-
-        notify({
-            closeAll: false,
-            buttons : data.timeout && {} || ( data.buttons || { 'labels.ok': true } ),
-            title   : title,
-            message : message,
-            callback: callback,
-            data    : data,
-            timeout : data.timeout || 0
-        });
-    };
-
-    // Confirm... Yes or no
-    notify.confirm = function ( message, title, data, callback ) {
-
-        if ( typeof data === 'function' ) {
-            callback = data;
-            data     = {};
-        }
-
-        data = data || {};
-
-        notify.open({
-            closeAll: true,
-            buttons : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
-            title   : title,
-            message : message,
-            callback: callback,
-            data    : data
-        });
-    };
-
-    notify.prompt = function ( message, title, data, callback ) {
-
-        if ( typeof data === 'function' ) {
-            callback = data;
-            data     = {};
-        }
-
-        data = data || {};
-
-        // We'll make this worth our while
-        var contents = [];
-
-        var elTitle   = document.createElement('H2'),
-            elMessage = document.createElement('P');
-        append(elTitle,document.createTextNode(notify.trigger('locale', title || '')));
-        append(elMessage,document.createTextNode(notify.trigger('locale', message || '')));
-
-        var form = document.createElement('FORM'),
-            input = document.createElement('INPUT');
-        form.setAttribute('onsubmit', 'return false;');
-        Object.keys(data).forEach(function ( key ) {
-            input.setAttribute(key, data[key]);
-        });
-        input.setAttribute('name', 'prompt');
-        append(form,input);
-
-        if ( title.innerHTML   ) { contents.push(title  ); }
-        if ( message.innerHTML ) { contents.push(message); }
-        contents.push(form);
-
-        notify.open({
-            closeAll: true,
-            buttons : data.buttons || { 'labels.ok': true, 'labels.cancel': false },
-            contents: contents,
-            callback: function ( value ) {
-                if ( value ) {
-                    callback(input.value);
-                    return true;
-                }
-                callback(false);
-                return true;
-            },
-            data    : data
-        });
-
-    };
-
-    // Return our module
-    return notify;
-})
+  // Return our module
+  return notify;
+});
