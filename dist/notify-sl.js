@@ -25,7 +25,6 @@
     };
     obj.trigger = function(name,data) {
       if(!list[name]) return data;
-      data = data || true;
       var self = this;
       args = [].slice.call(arguments);
       args.shift();
@@ -171,8 +170,8 @@
       title.style.paddingTop = 0;
       message.style.marginBottom = 0;
       message.style.paddingBottom = 0;
-      if (title.innerHTML  ) append(notification.element,title  );
-      if (message.innerHTML) append(notification.element,message);
+      if (title.innerText  ) append(notification.element,title  );
+      if (message.innerText) append(notification.element,message);
     }
 
     // Handle buttons
