@@ -113,6 +113,7 @@
     position  : 'fixed',
     right     : '0px',
     top       : '0px',
+    zIndex    : 100000,
   });
 
   // Close all notifications
