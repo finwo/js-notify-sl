@@ -4,3 +4,4 @@ node_modules/
 /.gtm/
 .sass-cache/
 _site/
+.tern*
