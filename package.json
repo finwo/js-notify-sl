@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "make"
   },
+  "homepage": "http://git.finwo.net/js-notify-sl",
   "repository": {
     "type": "git",
     "url": "git+http://git.finwo.net/js-notify-sl"
