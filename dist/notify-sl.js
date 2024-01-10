@@ -1,18 +1,21 @@
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
+  var instance = factory();
 
-    // Use requirejs if possible
-    if ( (typeof define === 'function') && define.amd ) {
-        return define(factory);
-    }
+  if ('undefined' !== typeof module) {
+    // nodejs-ish environment
+    module.exports = intance;
+  } else if (('function' === typeof define) && define.amd) {
+    // Requirejs
+    return define(function() { return instance; });
+  } else {
+    // Assign to global
+    var g = (new Function('return this;'))();
+    g.notifysl = instance;
+  }
 
-    // Export for browser/node
-    this.notifysl = factory();
-
-    // Export for file inclusions
-    return this.notifysl;
-
+  return instance;
 })(function () {
 
   function hooked(obj) {
