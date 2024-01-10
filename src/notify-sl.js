@@ -127,7 +127,7 @@
 
   // Open a new notification
   notify.open = function( options ) {
-    options               = notify.trigger('open',Object.assign({},options));
+    options               = notify.trigger('open',Object.assign({style:{}},options));
     var callback          = options.callback || function(){};
     var animationDuration = options.animationDuration || notify.animationDuration;
 
@@ -147,13 +147,13 @@
     }
 
     // TODO: default styling
-    notification.element.style.background   = getStyle('background') || '#FFF';
-    notification.element.style.borderRadius = getStyle('borderRadius') || '0.2em';
-    notification.element.style.boxShadow    = '0 1px 2px rgba(0,0,0,0.5)';
-    notification.element.style.color        = getStyle('color') || '#222';
-    notification.element.style.marginTop    = '1em';
-    notification.element.style.padding      = getStyle('padding') || '1em';
-    notification.element.style.position     = 'relative';
+    notification.element.style.background   = options.style.background   ?? (getStyle('background'  ) || '#FFF');
+    notification.element.style.borderRadius = options.style.borderRadius ?? (getStyle('borderRadius') || '0.2em');
+    notification.element.style.boxShadow    = options.style.boxShadow    ?? '0 1px 2px rgba(0,0,0,0.5)';
+    notification.element.style.color        = options.style.color        ?? (getStyle('color') || '#222');
+    notification.element.style.marginTop    = options.style.marginTop    ?? '1em';
+    notification.element.style.padding      = options.style.padding      ?? (getStyle('padding') || '1em');
+    notification.element.style.position     = options.style.position     ?? 'relative';
 
     // Add user styling
     Object.assign(notification.element,notify.style,options.style||{});
@@ -171,6 +171,7 @@
       append(message,document.createTextNode(notify.trigger('locale',options.message||'')));
       title.style.marginTop = 0;
       title.style.paddingTop = 0;
+      if (options.style.titleColor) title.style.color = options.style.titleColor;
       message.style.marginBottom = 0;
       message.style.paddingBottom = 0;
       if (title.innerText  ) append(notification.element,title  );
@@ -229,6 +230,7 @@
       callback         : callback,
       data             : data,
       timeout          : data.timeout || 0,
+      style            : data.style || {},
     });
   };
 
@@ -248,6 +250,7 @@
       message          : message,
       callback         : callback,
       data             : data,
+      style            : data.style || {},
     });
   };
 
@@ -284,6 +287,7 @@
       buttons          : data.buttons || {'labels.ok':true,'labels.cancel':false},
       contents         : contents,
       data             : data,
+      style            : data.style || {},
       callback         : function(value) {
         if (value) callback(elInput.value);
         else callback(false);
