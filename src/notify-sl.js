@@ -1,17 +1,17 @@
 /** global: define */
 /** global: Node   */
 (function ( factory ) {
-  var instance = factory();
+  const instance = factory();
 
   if ('undefined' !== typeof module) {
     // nodejs-ish environment
-    module.exports = intance;
+    module.exports = instance;
   } else if (('function' === typeof define) && define.amd) {
     // Requirejs
     return define(function() { return instance; });
   } else {
     // Assign to global
-    var g = (new Function('return this;'))();
+    const g = (new Function('return this;'))();
     g.notifysl = instance;
   }
 
@@ -19,7 +19,7 @@
 })(function () {
 
   function hooked(obj) {
-    var list = {};
+    const list = {};
     obj = obj || {};
     obj.on= function(name,fn) {
       if ('function' !== typeof fn) return obj;
@@ -28,7 +28,7 @@
     };
     obj.trigger = function(name,data) {
       if(!list[name]) return data;
-      var self = this;
+      const self = this;
       args = [].slice.call(arguments);
       args.shift();
       list[name].forEach(function(fn) {

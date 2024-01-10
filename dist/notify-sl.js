@@ -1,19 +1,19 @@
 (function(factory) {
-  var instance = factory();
+  const instance = factory();
   if ("undefined" !== typeof module) {
-    module.exports = intance;
+    module.exports = instance;
   } else if ("function" === typeof define && define.amd) {
     return define(function() {
       return instance;
     });
   } else {
-    var g = new Function("return this;")();
+    const g = new Function("return this;")();
     g.notifysl = instance;
   }
   return instance;
 })(function() {
   function hooked(obj) {
-    var list = {};
+    const list = {};
     obj = obj || {};
     obj.on = function(name, fn) {
       if ("function" !== typeof fn)
@@ -24,7 +24,7 @@
     obj.trigger = function(name, data) {
       if (!list[name])
         return data;
-      var self = this;
+      const self = this;
       args = [].slice.call(arguments);
       args.shift();
       list[name].forEach(function(fn) {
